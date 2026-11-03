@@ -46,7 +46,7 @@ export default async function SeriesPage({ params }) {
             Catalogue
           </Link>
           <span className="text-slate-300">/</span>
-          <Link href={`/products?category=${s.category}`} className="hover:text-[#1f5c6b] transition">
+          <Link href={`/collections/${s.category}`} className="hover:text-[#1f5c6b] transition">
             {category?.label || "Workstations"}
           </Link>
           <span className="text-slate-300">/</span>

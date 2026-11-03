@@ -1,8 +1,11 @@
-import { SITE_URL, series } from "@/lib/catalogue";
+import { SITE_URL, categories, series } from "@/lib/catalogue";
+
+// Generated once at build time for the static export
+export const dynamic = "force-static";
 
 export default function sitemap() {
   const lastModified = new Date();
-  const pages = ["", "/products", "/about", "/contact"].map((path) => ({
+  const pages = ["", "/products", ...categories.map((c) => `/collections/${c.id}`), "/about", "/contact"].map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified,
     changeFrequency: "daily",

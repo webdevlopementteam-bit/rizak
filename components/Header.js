@@ -9,9 +9,9 @@ import { company } from "@/lib/catalogue";
 const links = [
   { href: "/about", label: "About Us" },
   { href: "/products", label: "Products" },
-  { href: "/products?category=workstations", label: "Workstations" },
-  { href: "/products?category=executive", label: "Executive" },
-  { href: "/products?category=education", label: "Education" },
+  { href: "/collections/workstations", label: "Workstations" },
+  { href: "/collections/executive", label: "Executive" },
+  { href: "/collections/education", label: "Education" },
   { href: "/contact", label: "Contact Us" },
 ];
 

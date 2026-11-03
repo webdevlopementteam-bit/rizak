@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import FilteredGrid from "@/components/FilteredGrid";
 import Reveal from "@/components/Reveal";
-import SeriesCard from "@/components/SeriesCard";
 import { Eyebrow, PageHero } from "@/components/ui";
 import { categories, series } from "@/lib/catalogue";
 
@@ -10,22 +10,6 @@ export const metadata = {
   title: "Modular Furniture Series & Workstations",
   description:
     "Explore the complete Rizak Industries catalogue — 18+ modular metal leg frame series, executive desks, conference tables, classroom and computer furniture.",
-};
-
-const categoryImages = {
-  workstations: "/catalogue/j27-3.webp",
-  conference: "/catalogue/y6-b.webp",
-  executive: "/catalogue/exec-1-1.webp",
-  education: "/catalogue/classroom-02.webp",
-  computer: "/catalogue/computer-02.webp",
-};
-
-const categoryNotes = {
-  workstations: "Leg-frame systems for desks, benching and clusters.",
-  conference: "Boardroom and meeting tables for every room size.",
-  executive: "Executive tables, L-desks and cabin storage in wood.",
-  education: "Classroom desks, activity tables and shelving.",
-  computer: "Computer tables, study desks and library units.",
 };
 
 const options = [
@@ -37,7 +21,7 @@ const options = [
 
 const countFor = (id) => (id === "all" ? series.length : series.filter((s) => s.category === id).length);
 
-export default function ProductsPage({ searchParams }) {
+export default function ProductsPage() {
   return (
     <div className="bg-white">
       <PageHero image="/catalogue/slide-lifestyle-1.webp" eyebrow="Our Collection" title="Furniture engineered for every workspace.">
@@ -59,13 +43,13 @@ export default function ProductsPage({ searchParams }) {
         <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {categories.map((c, i) => (
             <Reveal key={c.id} delay={i * 70} className={i === 0 ? "col-span-2 md:col-span-1" : ""}>
-              <Link href={`/products?category=${c.id}#series`} scroll={false} className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-[#eee]">
-                <Image src={categoryImages[c.id]} alt={c.label} fill sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover transition duration-700 group-hover:scale-105" />
+              <Link href={`/collections/${c.id}`} className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-[#eee]">
+                <Image src={c.image} alt={c.label} fill sizes="(min-width: 1024px) 20vw, 50vw" className="object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1b1d1f]/85 via-[#1b1d1f]/20 to-transparent" />
                 <div className="absolute inset-x-4 bottom-4 text-white">
                   <p className="text-[11px] tracking-[0.18em] text-[#d9b77a] uppercase">{countFor(c.id)} series</p>
                   <h3 className="mt-1 text-[17px] leading-snug font-medium">{c.label}</h3>
-                  <p className="mt-1 hidden text-[12px] leading-snug text-white/70 sm:block">{categoryNotes[c.id]}</p>
+                  <p className="mt-1 hidden text-[12px] leading-snug text-white/70 sm:block">{c.note}</p>
                 </div>
               </Link>
             </Reveal>
@@ -76,7 +60,7 @@ export default function ProductsPage({ searchParams }) {
       {/* SERIES GRID */}
       <section id="series" className="mx-auto max-w-7xl scroll-mt-28 px-5 pt-20 pb-24 sm:px-8 sm:pt-24">
         <Suspense fallback={<div className="h-[60vh]" />}>
-          <FilteredGrid searchParams={searchParams} />
+          <FilteredGrid />
         </Suspense>
       </section>
 
@@ -128,69 +112,5 @@ export default function ProductsPage({ searchParams }) {
         </div>
       </section>
     </div>
-  );
-}
-
-async function FilteredGrid({ searchParams }) {
-  const { category } = await searchParams;
-  const active = categories.some((c) => c.id === category) ? category : "all";
-  const tabs = [{ id: "all", label: "All" }, ...categories];
-  // "All" groups the grid by category; a filter shows just that group
-  const groups = (active === "all" ? categories : categories.filter((c) => c.id === active))
-    .map((c) => ({ ...c, items: series.filter((s) => s.category === c.id) }))
-    .filter((g) => g.items.length);
-
-  return (
-    <>
-      <div className="flex flex-col gap-6 border-b border-[#ece9e3] pb-5 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <Eyebrow>The catalogue</Eyebrow>
-          <h2 className="mt-5 text-3xl font-medium tracking-tight text-[#1c1f22] sm:text-[2.4rem]">
-            {active === "all" ? "All series" : categories.find((c) => c.id === active).label}
-          </h2>
-        </div>
-        <nav className="-mx-5 flex gap-1 overflow-x-auto px-5 sm:mx-0 sm:px-0" aria-label="Filter by category">
-          {tabs.map((t) => {
-            const on = active === t.id;
-            return (
-              <Link
-                key={t.id}
-                href={t.id === "all" ? "/products#series" : `/products?category=${t.id}#series`}
-                scroll={false}
-                className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[13px] transition ${
-                  on ? "bg-[#1c1f22] text-white" : "text-[#555] hover:bg-[#f4f4f3] hover:text-[#1c1f22]"
-                }`}
-              >
-                {t.label}
-                <span className={`text-[11px] ${on ? "text-[#d9b77a]" : "text-[#aaa]"}`}>{countFor(t.id)}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      <div className="mt-12 space-y-20">
-        {groups.map((g) => (
-          <div key={g.id}>
-            {groups.length > 1 && (
-              <Reveal className="mb-8 flex items-center gap-4">
-                <h3 className="text-xl font-medium text-[#1c1f22]">{g.label}</h3>
-                <span className="h-px flex-1 bg-[#ece9e3]" />
-                <span className="text-[13px] text-[#999]">
-                  {g.items.length} series
-                </span>
-              </Reveal>
-            )}
-            <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-              {g.items.map((s, i) => (
-                <Reveal key={s.slug} delay={(i % 3) * 70}>
-                  <SeriesCard s={s} />
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
   );
 }

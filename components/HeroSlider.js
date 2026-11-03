@@ -4,16 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
-export default function HeroSlider({ slides }) {
+const INTERVAL = 6000;
+
+export default function HeroSlider({ slides, video, poster }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const go = useCallback((d) => setActive((i) => (i + d + slides.length) % slides.length), [slides.length]);
 
   useEffect(() => {
     if (paused) return;
-    const t = setInterval(() => go(1), 6000);
+    const t = setInterval(() => go(1), INTERVAL);
     return () => clearInterval(t);
-  }, [paused, go]);
+  }, [paused, go, active]);
 
   const s = slides[active];
 
@@ -23,22 +25,21 @@ export default function HeroSlider({ slides }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {slides.map((sl, i) => (
-        <Image
-          key={sl.image}
-          src={sl.image}
-          alt={sl.title}
-          fill
-          priority={i === 0}
-          quality={90}
-          sizes="100vw"
-          className={`object-cover transition-all duration-[1600ms] ease-out ${
-            i === active ? "scale-100 opacity-100" : "scale-105 opacity-0"
-          }`}
-        />
-      ))}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-black/40" />
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
+      {/* poster stays underneath so the hero never flashes empty while the video loads */}
+      <Image src={poster} alt="" fill priority quality={85} sizes="100vw" className="object-cover" />
+      <video
+        className="absolute inset-0 size-full object-cover motion-reduce:hidden"
+        src={video}
+        poster={poster}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-black/40" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/55 to-transparent" />
 
       <div className="relative mx-auto h-full max-w-6xl px-5">
         <ol className="absolute top-40 left-5 space-y-1 sm:top-44">
@@ -54,7 +55,18 @@ export default function HeroSlider({ slides }) {
                 <span className={`w-6 text-sm font-semibold text-[#d9b77a] transition-opacity ${i === active ? "opacity-100" : "opacity-0"}`}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                {sl.title}
+                <span className="relative">
+                  {sl.title}
+                  {/* thin gold timer under the active title */}
+                  {i === active && (
+                    <span className="absolute -bottom-1 left-0 h-0.5 w-full overflow-hidden bg-white/15">
+                      <span
+                        key={`${active}-${paused}`}
+                        className={`block h-full origin-left bg-[#d9b77a] ${paused ? "scale-x-100" : "animate-[grow_6s_linear]"}`}
+                      />
+                    </span>
+                  )}
+                </span>
               </button>
             </li>
           ))}
@@ -89,6 +101,13 @@ export default function HeroSlider({ slides }) {
             </Link>
           </div>
         </div>
+
+        <span className="absolute bottom-6 left-5 hidden items-center gap-3 text-[11px] tracking-[0.3em] text-white/70 uppercase sm:flex">
+          <span className="relative h-10 w-px overflow-hidden bg-white/25">
+            <span className="absolute inset-x-0 top-0 h-1/2 animate-[scrollCue_2s_ease-in-out_infinite] bg-white" />
+          </span>
+          Scroll
+        </span>
       </div>
     </section>
   );

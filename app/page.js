@@ -3,36 +3,32 @@ import Link from "next/link";
 import HeroSlider from "@/components/HeroSlider";
 import Marquee from "@/components/Marquee";
 import Reveal from "@/components/Reveal";
-import { certifications, clientLogos, company, machinery, series } from "@/lib/catalogue";
+import { certifications, clientLogos, company, frameSeries, machinery, series } from "@/lib/catalogue";
 
 const slides = [
   {
     title: "Office Workstations",
     heading: "Workstations engineered for everyday work.",
     text: "Modular desking on our own metal leg frames — from single desks to long benching runs, made to your layout and finish.",
-    image: "/catalogue/slide-lifestyle-1.webp",
-    href: "/products?category=workstations",
+    href: "/collections/workstations",
   },
   {
     title: "Conference Tables",
     heading: "Meeting rooms that leave an impression.",
     text: "Boardroom and conference tables with tapered steel legs and integrated cable management, sized for your room.",
-    image: "/catalogue/slide-y6-b.webp",
-    href: "/products?category=conference",
+    href: "/collections/conference",
   },
   {
     title: "Executive Cabins",
     heading: "Cabins finished in rich wood laminates.",
     text: "Executive desks, L-tables and storage crafted on our in-house wood line, with matching cabinets and credenzas.",
-    image: "/catalogue/slide-exec-1-1.webp",
-    href: "/products?category=executive",
+    href: "/collections/executive",
   },
   {
     title: "Manager Desks",
     heading: "Bright, modern cabins for leaders.",
     text: "Manager and director desks with matching storage and modesty panels — designed for light-filled, contemporary offices.",
-    image: "/catalogue/slide-j26-1.webp",
-    href: "/products?category=executive",
+    href: "/collections/executive",
   },
 ];
 
@@ -72,11 +68,30 @@ const reasons = [
 ];
 
 const featured = [
-  { label: "Workstations", href: "/products?category=workstations", image: "/catalogue/lifestyle-1.webp" },
-  { label: "Executive Desks", href: "/products?category=executive", image: "/catalogue/exec-1-1.webp" },
+  { label: "Workstations", href: "/collections/workstations", image: "/catalogue/lifestyle-1.webp" },
+  { label: "Executive Desks", href: "/collections/executive", image: "/catalogue/exec-1-1.webp" },
   { label: "Manager Desks", href: "/products/ri-j26", image: "/catalogue/j26-1.webp" },
-  { label: "Conference Tables", href: "/products?category=conference", image: "/catalogue/y6-b.webp", wide: true },
-  { label: "Open-Plan Benching", href: "/products?category=workstations", image: "/catalogue/lifestyle-2.webp", wide: true },
+  { label: "Conference Tables", href: "/collections/conference", image: "/catalogue/y6-b.webp", wide: true },
+  { label: "Open-Plan Benching", href: "/collections/workstations", image: "/catalogue/lifestyle-2.webp", wide: true },
+];
+
+const craft = [
+  {
+    tag: "Metal components",
+    title: "Leg frames & metal works",
+    text: "Laser-cut, CNC-bent and powder-coated steel frames for workstations, conference and classroom furniture.",
+    points: ["Laser cutting", "CNC bending", "Powder coating"],
+    image: "/catalogue/hero-a50.webp",
+    href: "/collections/workstations",
+  },
+  {
+    tag: "Wooden works",
+    title: "Cabins, tops & storage",
+    text: "Executive desks, worktops and storage cut and edge-banded on our CNC wood line for a precise finish.",
+    points: ["CNC routing", "Panel sizing", "Edge banding"],
+    image: "/catalogue/exec-2-1.webp",
+    href: "/collections/executive",
+  },
 ];
 
 const stats = [
@@ -92,9 +107,16 @@ const explore = [
   { tag: "Quotation", title: "Share your floor plan and request factory pricing", href: "/contact", image: "/catalogue/2575-b.webp" },
 ];
 
-function SectionTitle({ title, sub }) {
+function SectionTitle({ eyebrow, title, sub }) {
   return (
     <Reveal className="text-center">
+      {eyebrow && (
+        <p className="mb-3 flex items-center justify-center gap-4 text-[11px] font-semibold tracking-[0.4em] text-[#1f5c6b] uppercase sm:text-[12px]">
+          <span className="h-px w-10 bg-[#b08a52] sm:w-14" />
+          {eyebrow}
+          <span className="h-px w-10 bg-[#b08a52] sm:w-14" />
+        </p>
+      )}
       <h2 className="text-2xl font-semibold tracking-wide text-[#222] uppercase sm:text-[2rem]">{title}</h2>
       {sub && <p className="mx-auto mt-3 max-w-2xl text-[14px] text-[#666]">{sub}</p>}
     </Reveal>
@@ -104,7 +126,7 @@ function SectionTitle({ title, sub }) {
 export default function Home() {
   return (
     <>
-      <HeroSlider slides={slides} />
+      <HeroSlider slides={slides} video="/video-banner.mp4" poster="/catalogue/slide-lifestyle-1.webp" />
 
       {/* WHY CHOOSE US */}
       <section className="relative overflow-hidden bg-[#f4f4f3] py-14 sm:py-16">
@@ -157,7 +179,7 @@ export default function Home() {
       {/* FEATURED PRODUCTS */}
       <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-[1600px] px-5 sm:px-8">
-          <SectionTitle title="Featured Products" sub="Furniture designed to work harder for your team — in the grade and finish your project needs." />
+          <SectionTitle eyebrow="Collections" title="Featured Products" sub="Furniture designed to work harder for your team — in the grade and finish your project needs." />
           <div className="mt-14 grid gap-3 sm:grid-cols-6">
             {featured.map((f, i) => (
               <Reveal key={f.label} delay={(i % 3) * 90} className={f.wide ? "sm:col-span-3" : "sm:col-span-2"}>
@@ -165,11 +187,57 @@ export default function Home() {
                   <div className={`relative ${f.wide ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
                     <Image src={f.image} alt={f.label} fill sizes={f.wide ? "(min-width: 640px) 50vw, 100vw" : "(min-width: 640px) 33vw, 100vw"} className="object-cover transition duration-700 group-hover:scale-105" />
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" />
-                  <span className="absolute bottom-4 left-4 text-[15px] font-medium text-white">{f.label}</span>
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/55 to-transparent" />
+                  <span className="absolute inset-x-5 bottom-5 flex items-end justify-between text-white">
+                    <span>
+                      <span className="block h-0.5 w-6 bg-[#d9b77a] transition-all duration-500 group-hover:w-12" />
+                      <span className="mt-2 block text-[16px] font-medium">{f.label}</span>
+                    </span>
+                    <span className="grid size-9 translate-x-2 place-items-center rounded-full bg-white text-[#1f5c6b] opacity-0 transition duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                      <svg viewBox="0 0 20 20" className="size-3.5" fill="none" aria-hidden="true">
+                        <path d="M6 14 14 6m0 0H7m7 0v7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </span>
                 </Link>
               </Reveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* METAL & WOOD */}
+      <section className="pb-20 sm:pb-24">
+        <div className="mx-auto max-w-[1600px] px-5 sm:px-8">
+          <SectionTitle eyebrow="Two lines, one factory" title="Strength in Metal. Excellence in Wood." />
+          <div className="relative mt-12 grid gap-4 lg:grid-cols-2">
+            {craft.map((k, i) => (
+              <Reveal key={k.title} delay={i * 120}>
+                <Link href={k.href} className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-[#2b2b2b] sm:aspect-[16/10]">
+                  <Image src={k.image} alt={k.title} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition duration-1000 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1b1d1f]/90 via-[#1b1d1f]/30 to-transparent" />
+                  <div className="absolute inset-x-6 bottom-6 text-white sm:inset-x-9 sm:bottom-9">
+                    <p className="text-[11px] tracking-[0.25em] text-[#d9b77a] uppercase">{k.tag}</p>
+                    <h3 className="mt-2 text-2xl font-medium sm:text-3xl">{k.title}</h3>
+                    <p className="mt-2 max-w-md text-[14px] leading-relaxed text-white/75">{k.text}</p>
+                    <ul className="mt-4 flex flex-wrap gap-2">
+                      {k.points.map((p) => (
+                        <li key={p} className="rounded-full border border-white/25 px-3 py-1 text-[12px] text-white/85 backdrop-blur-sm">{p}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <span className="absolute top-6 right-6 grid size-11 place-items-center rounded-full bg-white/90 text-[#1f5c6b] transition duration-300 group-hover:rotate-45 group-hover:bg-[#d9b77a] group-hover:text-[#2e261f]">
+                    <svg viewBox="0 0 20 20" className="size-4" fill="none" aria-hidden="true">
+                      <path d="M6 14 14 6m0 0H7m7 0v7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+            {/* ampersand seal where the two panels meet */}
+            <span className="pointer-events-none absolute top-1/2 left-1/2 hidden size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-white bg-[#1f5c6b] text-2xl font-medium text-white shadow-lg lg:grid">
+              &amp;
+            </span>
           </div>
         </div>
       </section>
@@ -310,6 +378,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* SIGNATURE FRAMES */}
+      <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-[1600px] px-5 sm:px-8">
+          <Reveal className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+            <div>
+              <p className="flex items-center gap-3 text-[13px] font-semibold tracking-[0.12em] text-[#1f5c6b] uppercase">
+                <span className="h-0.5 w-10 bg-[#1f5c6b]" />
+                Signature leg frames
+              </p>
+              <h2 className="mt-4 max-w-2xl text-3xl leading-tight font-medium tracking-tight text-[#2b2b2b] sm:text-[2.6rem]">
+                Every desk starts with a frame <span className="text-[#1f5c6b]">we make ourselves.</span>
+              </h2>
+            </div>
+            <Link href="/collections/workstations" className="group inline-flex shrink-0 items-center gap-2 text-[14px] font-medium text-[#2b2b2b] hover:text-[#1f5c6b]">
+              View all {series.filter((s) => s.category === "workstations").length} frame families
+              <svg viewBox="0 0 20 20" className="size-4 text-[#b08a52] transition-transform group-hover:translate-x-1" fill="none" aria-hidden="true">
+                <path d="M3 10h14m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          </Reveal>
+
+          <div className="-mx-5 mt-10 flex snap-x gap-4 overflow-x-auto px-5 pb-4 sm:-mx-8 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {frameSeries.map((s, i) => (
+              <Reveal key={s.slug} delay={i * 60} className="w-[68%] shrink-0 snap-start sm:w-[34%] lg:w-[22%] xl:w-[17.5%]">
+                <Link href={`/products/${s.slug}`} className="group block">
+                  <span className="relative block aspect-[3/4] overflow-hidden rounded-2xl bg-[#e9ebec]">
+                    <Image src={s.hero} alt={`${s.name} leg frame`} fill sizes="(min-width: 1280px) 18vw, (min-width: 1024px) 22vw, (min-width: 640px) 34vw, 68vw" className="object-cover transition duration-700 group-hover:scale-105" />
+                    <span className="absolute top-3 left-3 rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-[#b08a52]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </span>
+                  <span className="mt-3 flex items-center justify-between">
+                    <span className="text-[15px] font-medium text-[#2b2b2b] group-hover:text-[#1f5c6b]">{s.name}</span>
+                    <span className="h-px w-6 bg-[#d9b77a] transition-all duration-500 group-hover:w-10" />
+                  </span>
+                  <span className="block text-[12px] text-[#888]">{s.frame}</span>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CLIENTS STRIP */}
       <section className="border-y border-[#eee] py-10">
         <p className="mb-8 text-center text-[12px] font-semibold tracking-[0.25em] text-[#999] uppercase">Trusted by leading institutions</p>
@@ -334,7 +445,7 @@ export default function Home() {
       {/* EXPLORE MORE */}
       <section className="bg-[#f5f5f5] py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5">
-          <SectionTitle title="Explore More With Rizak" sub="Products, company information and project support — everything you need to plan your next space." />
+          <SectionTitle eyebrow="Get Started" title="Explore More With Rizak" sub="Products, company information and project support — everything you need to plan your next space." />
           <div className="mt-14 grid gap-6 md:grid-cols-3">
             {explore.map((e, i) => (
               <Reveal key={e.title} delay={i * 90}>
@@ -359,31 +470,68 @@ export default function Home() {
       </section>
 
       {/* INSIDE OUR FACTORY */}
-      <section className="py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-5">
-          <SectionTitle title="Inside Our Factory" sub="Manufacturing is mostly machine made — ensuring fewer errors and lower maintenance costs." />
-          <div className="mt-14 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-            <Reveal className="group relative overflow-hidden rounded-xl bg-[#eee]">
-              <div className="relative aspect-[16/11]">
-                <Image src={machinery[2].image} alt={machinery[2].name} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover transition duration-700 group-hover:scale-105" />
-              </div>
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-6 pt-16">
-                <p className="text-xl font-semibold text-white">{machinery[2].name}</p>
-              </div>
-            </Reveal>
-            <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
-              {[machinery[3], machinery[0], machinery[1]].map((m, i) => (
-                <Reveal key={m.name} delay={i * 90} className="flex items-center gap-4 rounded-xl bg-[#f5f5f5] p-3">
-                  <div className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-white">
-                    <Image src={m.image} alt="" fill sizes="80px" className="object-contain p-1" />
-                  </div>
-                  <div>
-                    <p className="text-[14px] font-semibold text-[#222]">{m.name}</p>
-                    <p className="mt-1 text-[12px] text-[#999]">{m.group} line</p>
-                  </div>
-                </Reveal>
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        {/* faint blueprint grid fading out toward the edges */}
+        <div className="bg-tech-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_75%)]" />
+
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.85fr_1.4fr] lg:gap-16">
+          <Reveal className="lg:sticky lg:top-28 lg:self-start">
+            <p className="flex items-center gap-3 text-[13px] font-semibold tracking-[0.12em] text-[#1f5c6b] uppercase">
+              <span className="h-0.5 w-10 bg-[#1f5c6b]" />
+              Manufacturing
+            </p>
+            <h2 className="mt-5 text-4xl leading-[1.05] font-medium tracking-tight text-[#2b2b2b] uppercase sm:text-5xl">
+              Inside Our
+              <br />
+              <span className="text-[#1f5c6b]">Factory</span>
+            </h2>
+            <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[#555] sm:text-[16px]">
+              Manufacturing is mostly machine made — ensuring fewer errors and lower maintenance costs. Metal and wood are processed under one roof, so every frame and top fits first time.
+            </p>
+
+            <div className="mt-8 grid max-w-md grid-cols-2 divide-x divide-[#e5e1d8] border-y border-[#e5e1d8]">
+              {["Metal", "Wood"].map((g) => (
+                <div key={g} className="py-5 first:pr-5 last:pl-5">
+                  <p className="text-3xl font-semibold text-[#2b2b2b]">
+                    {String(machinery.filter((m) => m.group === g).length).padStart(2, "0")}
+                  </p>
+                  <p className="mt-1 text-[13px] text-[#777]">CNC machines · {g} line</p>
+                </div>
               ))}
             </div>
+
+            <Link
+              href="/contact"
+              className="group mt-9 inline-flex items-center gap-3 rounded-full border border-[#2b2b2b] px-7 py-3.5 text-[14px] font-semibold text-[#2b2b2b] transition hover:border-[#1f5c6b] hover:bg-[#1f5c6b] hover:text-white"
+            >
+              Plan a Factory Visit
+              <svg viewBox="0 0 20 20" className="size-4 transition-transform group-hover:translate-x-1" fill="none" aria-hidden="true">
+                <path d="M3 10h14m-5-5 5 5-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          </Reveal>
+
+          <div className="grid gap-5 sm:grid-cols-2 sm:pb-10">
+            {[machinery[2], machinery[3], machinery[0], machinery[1]].map((m, i) => (
+              <Reveal key={m.name} delay={i * 90} className={i % 2 ? "sm:mt-10 sm:-mb-10" : ""}>
+                <div className="group h-full overflow-hidden rounded-2xl border border-[#ebe7df] bg-white transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgb(0_0_0/0.25)]">
+                  <div className="relative aspect-[4/3] bg-[#f4f4f3]">
+                    <Image src={m.image} alt={m.name} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw" className="object-contain p-5 mix-blend-multiply transition duration-700 group-hover:scale-105" />
+                    <span
+                      className={`absolute top-4 left-4 rounded-full px-3 py-1 text-[11px] font-semibold tracking-[0.15em] uppercase ${
+                        m.group === "Metal" ? "bg-[#e7eff0] text-[#1f5c6b]" : "bg-[#f8efe2] text-[#8a5f2b]"
+                      }`}
+                    >
+                      {m.group}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-4 p-5">
+                    <span className="text-[13px] font-semibold text-[#b08a52]">{String(i + 1).padStart(2, "0")}</span>
+                    <p className="text-[15px] leading-snug font-semibold text-[#222]">{m.name}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>

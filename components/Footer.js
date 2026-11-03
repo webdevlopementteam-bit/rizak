@@ -14,7 +14,7 @@ const columns = [
   },
   {
     title: "Products",
-    links: categories.map((c) => ({ href: `/products?category=${c.id}`, label: c.label })),
+    links: categories.map((c) => ({ href: `/collections/${c.id}`, label: c.label })),
   },
   {
     title: "Popular Series",
@@ -138,7 +138,7 @@ export default function Footer() {
 
       {/* Certifications */}
       <div className="relative border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-5 py-6 text-[12px] tracking-[0.12em] text-white/45 uppercase sm:px-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-5 py-6 text-[12px] tracking-[0.12em] text-white/80 uppercase sm:px-8">
           <span className="text-[#d9b77a]">Certified</span>
           {certifications.map((c) => (
             <span key={c}>{c}</span>
@@ -148,10 +148,20 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="relative border-t border-white/10 bg-black/20">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-5 text-[13px] text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <p>© {company.name}. All rights reserved.</p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-5 py-5 text-[13px] text-white/80 sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <p>
-            {company.brand} · <span className="text-white/60">{company.tagline}</span>
+            © {company.name}. All rights reserved. · Powered by{" "}
+            <a
+              href="https://www.cybertricksmedia.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#d9b77a] underline-offset-4 transition hover:underline"
+            >
+              Cybertricksmedia Pvt Ltd
+            </a>
+          </p>
+          <p>
+            {company.brand} · <span className="text-white">{company.tagline}</span>
           </p>
         </div>
       </div>
